@@ -4,6 +4,7 @@ import com.gondo.map.domain.category.record.CategoryRecord;
 import com.gondo.map.domain.category.service.CategoryService;
 import com.gondo.map.domain.hist.dto.HistRecord;
 import com.gondo.map.domain.hist.dto.HistSaveRecord;
+import com.gondo.map.domain.hist.dto.YearHistDto;
 import com.gondo.map.domain.hist.repository.HistRepository;
 import com.gondo.map.domain.hist.repository.query.HistQuery;
 import com.gondo.map.domain.site.record.SiteRecord;
@@ -11,10 +12,13 @@ import com.gondo.map.domain.site.service.SiteService;
 import com.google.common.base.Strings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,8 +30,29 @@ public class HistService {
     private final CategoryService categoryService;
     private final SiteService siteService;
 
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    @Value("${career.start-year}")
+    private String careerStartYear;
+
     public List<HistRecord> getItems() {
-        return histQuery.getHistItems();
+        return findHistAllItems();
+    }
+
+    public List<YearHistDto> getYearItems() {
+        List<HistRecord> histAllItems = findHistAllItems();
+        List<YearHistDto> careerStartYearToNowYear = findCareerStartYearToNowYear();
+        careerStartYearToNowYear.forEach(yearItem -> {
+            List<HistRecord> findFilterYearHistItems = histAllItems.stream()
+                    .filter(histRc -> histRc.startDtm().contains(yearItem.getYearLabel()) || histRc.endDtm().contains(yearItem.getYearLabel()))
+                    .collect(Collectors.toList());
+            yearItem.addHistRecord(findFilterYearHistItems);
+        });
+        return careerStartYearToNowYear;
+    }
+
+    private List<HistRecord> findHistAllItems() {
+        return histQuery.findHistItems();
     }
 
     public HistRecord addItem(HistSaveRecord saveRecord) {
@@ -56,5 +81,16 @@ public class HistService {
         return siteService.findItem(id);
     }
 
+    private List<YearHistDto> findCareerStartYearToNowYear() {
+        int startYearInt = LocalDate.parse(careerStartYear, formatter).getYear();
+        int currentYearInt = LocalDate.now().getYear();
+
+        List<YearHistDto> yearList = new ArrayList<>();
+        for (int year = startYearInt; year <= currentYearInt; year++) {
+            yearList.add(YearHistDto.of(String.valueOf(year), new ArrayList<>()));
+        }
+
+        return yearList;
+    }
 
 }

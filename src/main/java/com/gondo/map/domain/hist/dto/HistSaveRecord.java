@@ -15,10 +15,11 @@ public record HistSaveRecord(
         return History.of(
                 UUID.randomUUID().toString(),
                 this.histNm,
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 this.staffCnt,
                 this.categoryId,
-                this.siteId
+                this.siteId,
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")),
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"))
         );
     }
 }

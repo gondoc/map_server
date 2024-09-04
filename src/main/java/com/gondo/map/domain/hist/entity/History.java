@@ -24,9 +24,6 @@ public class History {
     @Column(name = "hist_nm")
     private String histNm;
 
-    @Column(name = "hist_dtm")
-    private String histDtm;
-
     @Column(name = "hist_staff_cnt")
     private Integer histStaffCnt;
 
@@ -36,8 +33,14 @@ public class History {
     @Column(name = "site_id")
     private String siteId;
 
+    @Column(name = "hist_start_dtm")
+    private String startDtm;
+
+    @Column(name = "hist_end_dtm")
+    private String endDtm;
+
     public HistRecord toDto(CategoryRecord categoryRecord, SiteRecord siteRecord) {
-        return HistRecord.of(this.histId, this.histNm, this.histDtm, this.histStaffCnt,
+        return HistRecord.of(this.histId, this.histNm, this.startDtm, this.endDtm, this.histStaffCnt,
                 categoryRecord.nm(), categoryRecord.content(),
                 siteRecord.nm(), siteRecord.lat(), siteRecord.lng(), siteRecord.logoImgPath()
         );

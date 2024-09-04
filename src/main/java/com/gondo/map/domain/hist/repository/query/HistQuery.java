@@ -21,12 +21,13 @@ public class HistQuery {
         this.query = jpaQueryFactory;
     }
 
-    public List<HistRecord> getHistItems() {
+    public List<HistRecord> findHistItems() {
         return query.select(Projections.constructor(
                 HistRecord.class,
                 history.histId.as("id"),
                 history.histNm.as("histNm"),
-                history.histDtm.as("dtm"),
+                history.startDtm.as("startDtm"),
+                history.endDtm.as("endDtm"),
                 history.histStaffCnt.as("staffCnt"),
                 category.categoryNm.as("categoryNm"),
                 category.categoryContent.as("categoryContent"),
@@ -40,7 +41,7 @@ public class HistQuery {
                 .on(history.categoryId.eq(category.categoryId))
                 .leftJoin(site)
                 .on(history.siteId.eq(site.siteId))
-                .orderBy(history.histDtm.desc())
+                .orderBy(history.endDtm.desc())
                 .fetch();
     }
 }
