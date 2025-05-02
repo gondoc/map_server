@@ -2,8 +2,8 @@ package com.gondo.map.domain.hist.service;
 
 import com.gondo.map.domain.category.record.CategoryRecord;
 import com.gondo.map.domain.category.service.CategoryService;
-import com.gondo.map.domain.hist.dto.HistRecord;
-import com.gondo.map.domain.hist.dto.HistSaveRecord;
+import com.gondo.map.domain.hist.record.HistRecord;
+import com.gondo.map.domain.hist.record.HistSaveRecord;
 import com.gondo.map.domain.hist.dto.YearHistDto;
 import com.gondo.map.domain.hist.repository.HistRepository;
 import com.gondo.map.domain.hist.repository.query.HistQuery;
@@ -32,7 +32,7 @@ public class HistService {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @Value("${career.start-year}")
+    @Value("${career.start}")
     private String careerStartYear;
 
     public List<HistRecord> getItems() {

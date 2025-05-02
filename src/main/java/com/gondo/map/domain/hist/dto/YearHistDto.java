@@ -1,5 +1,6 @@
 package com.gondo.map.domain.hist.dto;
 
+import com.gondo.map.domain.hist.record.HistRecord;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

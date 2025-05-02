@@ -1,4 +1,4 @@
-package com.gondo.map.domain.hist.dto;
+package com.gondo.map.domain.hist.record;
 
 public record HistRecord(String id, String histNm, String startDtm, String endDtm, Integer staffCnt,
                          String categoryNm, String categoryContent,

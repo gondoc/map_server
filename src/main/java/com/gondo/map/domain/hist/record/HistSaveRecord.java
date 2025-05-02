@@ -1,15 +1,16 @@
-package com.gondo.map.domain.hist.dto;
+package com.gondo.map.domain.hist.record;
 
 import com.gondo.map.domain.hist.entity.History;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 public record HistSaveRecord(
-        String histNm, Integer staffCnt,
+        String histNm,
+        Integer staffCnt,
         String categoryId,
-        String siteId
+        String siteId,
+        String startDtm,
+        String endDtm
 ) {
     public History toHistory() {
         return History.of(
@@ -18,8 +19,8 @@ public record HistSaveRecord(
                 this.staffCnt,
                 this.categoryId,
                 this.siteId,
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM")),
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"))
+                this.startDtm,
+                this.endDtm
         );
     }
 }

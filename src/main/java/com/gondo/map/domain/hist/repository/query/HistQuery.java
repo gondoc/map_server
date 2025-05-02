@@ -1,6 +1,6 @@
 package com.gondo.map.domain.hist.repository.query;
 
-import com.gondo.map.domain.hist.dto.HistRecord;
+import com.gondo.map.domain.hist.record.HistRecord;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;

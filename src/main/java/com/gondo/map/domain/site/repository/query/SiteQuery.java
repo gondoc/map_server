@@ -1,6 +1,5 @@
 package com.gondo.map.domain.site.repository.query;
 
-import com.gondo.map.domain.category.entity.Category;
 import com.gondo.map.domain.site.entity.Site;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;

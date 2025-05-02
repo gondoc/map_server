@@ -1,7 +1,7 @@
 package com.gondo.map.domain.hist.entity;
 
 import com.gondo.map.domain.category.record.CategoryRecord;
-import com.gondo.map.domain.hist.dto.HistRecord;
+import com.gondo.map.domain.hist.record.HistRecord;
 import com.gondo.map.domain.site.record.SiteRecord;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,9 +40,18 @@ public class History {
     private String endDtm;
 
     public HistRecord toDto(CategoryRecord categoryRecord, SiteRecord siteRecord) {
-        return HistRecord.of(this.histId, this.histNm, this.startDtm, this.endDtm, this.histStaffCnt,
-                categoryRecord.nm(), categoryRecord.content(),
-                siteRecord.nm(), siteRecord.lat(), siteRecord.lng(), siteRecord.logoImgPath()
+        return HistRecord.of(
+                this.histId,
+                this.histNm,
+                this.startDtm,
+                this.endDtm,
+                this.histStaffCnt,
+                categoryRecord.nm(),
+                categoryRecord.content(),
+                siteRecord.nm(),
+                siteRecord.lat(),
+                siteRecord.lng(),
+                siteRecord.logoImgPath()
         );
     }
 }
