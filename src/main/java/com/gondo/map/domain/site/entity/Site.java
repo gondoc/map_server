@@ -1,13 +1,16 @@
 package com.gondo.map.domain.site.entity;
 
 import com.gondo.map.domain.site.record.SiteRecord;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
+import com.gondo.map.domain.site.record.SiteUpdateRecord;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
@@ -31,8 +34,43 @@ public class Site {
     @Column(name = "site_logo_img_path")
     private String siteLogoImgPath;
 
-    public SiteRecord toDto() {
-        return SiteRecord.of(this.siteId, this.siteNm, this.siteLat, this.siteLng, this.siteLogoImgPath);
+    @Column(name = "site_use_yn")
+    private Boolean siteUseYn;
+
+    @Column(name = "site_create_dtm")
+    private LocalDateTime siteCreateDtm;
+
+    @Column(name = "site_update_dtm")
+    private LocalDateTime siteUpdateDtm;
+
+    @Column(name = "site_is_lock")
+    private Boolean siteIsLock;
+
+    public SiteRecord toRecord() {
+        return SiteRecord.of(
+                this.siteId,
+                this.siteNm,
+                this.siteLat,
+                this.siteLng,
+                this.siteLogoImgPath,
+                this.siteUseYn,
+                this.siteCreateDtm.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                this.siteUpdateDtm != null ? this.siteUpdateDtm.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : null,
+                this.siteIsLock
+        );
     }
 
+    public Site toUpdateEntity(SiteUpdateRecord updateReqDto, String fileName) {
+        this.siteId = updateReqDto.siteId();
+        this.siteNm = updateReqDto.siteNm();
+        this.siteLat = updateReqDto.siteLat();
+        this.siteLng = updateReqDto.siteLng();
+        this.siteLogoImgPath = fileName;
+        this.siteUpdateDtm = LocalDateTime.now();
+        return this;
+    }
+
+    public boolean findIsLockEntity() {
+        return this.siteIsLock;
+    }
 }
