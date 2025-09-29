@@ -2,6 +2,7 @@ package com.gondo.map.domain.category.record;
 
 import com.gondo.map.domain.category.entity.Category;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CategorySaveRecord (
@@ -12,7 +13,11 @@ public record CategorySaveRecord (
         return Category.of(
                 UUID.randomUUID().toString(),
                 this.name,
-                this.content
+                this.content,
+                LocalDateTime.now(),
+                null,
+                false,
+                true
         );
     }
 }
