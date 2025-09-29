@@ -1,27 +1,4 @@
 # Build stage
-
-#FROM azul/zulu-openjdk:17.0.10 AS builder
-#
-#WORKDIR /app
-#
-#COPY . .
-#
-#RUN chmod +x ./gradlew
-#RUN ./gradlew clean build -x test
-#
-## Run stage
-#
-#FROM azul/zulu-openjdk:17.0.10-jre
-#
-#WORKDIR /app
-#
-#COPY --from=builder /app/build/libs/*.jar map.jar
-#
-#EXPOSE 18080
-#
-#ENTRYPOINT ["java","-Dspring.profiles.active=prod","-jar","map.jar"]
-
-# Build stage
 FROM azul/zulu-openjdk:17.0.10 AS builder
 WORKDIR /app
 COPY . .
