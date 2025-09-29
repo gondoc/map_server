@@ -5,7 +5,8 @@ import com.gondo.map.domain.hist.entity.History;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record HistSaveRecord(
+public record HistUpdateRecord(
+        String histId,
         String histNm,
         Integer staffCnt,
         String categoryId,
@@ -15,7 +16,7 @@ public record HistSaveRecord(
 ) {
     public History toHistory() {
         return History.of(
-                UUID.randomUUID().toString(),
+                this.histId,
                 this.histNm,
                 this.staffCnt,
                 this.categoryId,

@@ -2,9 +2,12 @@ package com.gondo.map.domain.hist.service;
 
 import com.gondo.map.domain.category.record.CategoryRecord;
 import com.gondo.map.domain.category.service.CategoryService;
+import com.gondo.map.domain.common.CommException;
+import com.gondo.map.domain.hist.dto.YearHistDto;
+import com.gondo.map.domain.hist.entity.History;
 import com.gondo.map.domain.hist.record.HistRecord;
 import com.gondo.map.domain.hist.record.HistSaveRecord;
-import com.gondo.map.domain.hist.dto.YearHistDto;
+import com.gondo.map.domain.hist.record.HistUpdateRecord;
 import com.gondo.map.domain.hist.repository.HistRepository;
 import com.gondo.map.domain.hist.repository.query.HistQuery;
 import com.gondo.map.domain.site.record.SiteRecord;
@@ -17,7 +20,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,7 +76,48 @@ public class HistService {
             return null;
         }
 
-        return histRepository.save(saveRecord.toHistory()).toDto(findCategoryRecord, findSiteRecord);
+        return histRepository.save(saveRecord.toHistory()).toRecord(findCategoryRecord, findSiteRecord);
+    }
+
+    public HistRecord updateItem(HistUpdateRecord histUpdateRecord) {
+        Optional<History> optionalHistory = histRepository.findById(histUpdateRecord.histId());
+        if (optionalHistory.isEmpty()) {
+            return null;
+        } else {
+
+            History history = optionalHistory.get();
+            if (history.getHistIsLock()) {
+                throw new CommException(405, "관리자의 잠금 설정으로 인해 수정이 불가합니다.");
+            }
+
+            History save = histRepository.save(history.updateHistory(histUpdateRecord));
+
+            CategoryRecord findCategoryRecord = findCategoryRecordById(history.getCategoryId());
+            if (Objects.isNull(findCategoryRecord)) {
+                return null;
+            }
+
+            SiteRecord findSiteRecord = findSiteRecordById(save.getSiteId());
+            if (Objects.isNull(findSiteRecord)) {
+                return null;
+            }
+
+            return save.toRecord(findCategoryRecord, findSiteRecord);
+        }
+    }
+
+    public boolean deleteItem(String histId) {
+        Optional<History> optionalHistory = histRepository.findById(histId);
+        if (optionalHistory.isEmpty()) {
+            return false;
+        } else {
+            History history = optionalHistory.get();
+            if (history.getHistIsLock()) {
+                throw new CommException(405, "관리자의 잠금 설정으로 인해 삭제가 불가합니다.");
+            }
+
+            return histRepository.deleteByHistId(histId) > 0;
+        }
     }
 
     private CategoryRecord findCategoryRecordById(String id) {
