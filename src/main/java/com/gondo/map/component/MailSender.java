@@ -8,6 +8,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
@@ -61,7 +62,11 @@ public class MailSender {
         message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(email));
         message.setSubject(subject);
         message.setContent(content, "text/html;charset=UTF-8");
-        javaMailSender.send(message);
+        try {
+            javaMailSender.send(message);
+        } catch (MailSendException e) {
+            throw new IllegalStateException("송신 메일 서버의 오류가 발생하였습니다 잠시후 다시 시도 바랍니다.");
+        }
     }
 
     // 메일 본문을 만드는 메서드

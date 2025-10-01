@@ -44,6 +44,19 @@ public class AuthController {
         return CommResponse.response200(securityMemberRecord);
     }
 
+    @GetMapping("/recovery")
+    public CommResponse<?> getCurrentRecovery(Authentication authentication) throws Exception {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return CommResponse.response400(HttpStatus.UNAUTHORIZED);
+        }
+
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+        SecurityMemberRecord securityMemberRecord = securityUser.getSecurityMemberRecord();
+
+        MemberRecord member = memberService.getMember(securityMemberRecord.email());
+        return CommResponse.response200(member.recoveryEmail());
+    }
+
     @PostMapping("/login")
     public CommResponse<?> login(@RequestBody MemberRecord memberRecord, HttpServletResponse response) {
         try {

@@ -77,7 +77,8 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                     "/api/category/item"
             ),
             "GET", Arrays.asList(
-                    "/api/auth/me"         // 내 정보 조회
+                    "/api/auth/me",        // 내 정보 조회
+                    "/api/auth/recovery"   // 복구용 이메일
             )
     );
 

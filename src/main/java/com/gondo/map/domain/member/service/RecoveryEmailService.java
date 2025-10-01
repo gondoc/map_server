@@ -28,7 +28,7 @@ public class RecoveryEmailService {
     @Value("${app.front-end-url}")
     private String frontendBaseUrl;
 
-    public boolean regRecoveryMail(String email, String recoveryEmail) {
+    public boolean regRecoveryMail(String email, String recoveryEmail) throws Exception {
         // 아디 기본 검증
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("No user by email"));
@@ -45,12 +45,7 @@ public class RecoveryEmailService {
         // 이메일 내용
         String verifyLink = frontendBaseUrl + "/back/verify-recovery-email?token=" + token;
 
-        try {
-            mailSender.mailSend(recoveryEmail, VERIFY_RECOVERY_EMAIL_SUBJECT, getVerifyRecoveryEmailContent(verifyLink));
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        mailSender.mailSend(recoveryEmail, VERIFY_RECOVERY_EMAIL_SUBJECT, getVerifyRecoveryEmailContent(verifyLink));
         return true;
     }
 
